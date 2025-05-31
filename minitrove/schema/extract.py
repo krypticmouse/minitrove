@@ -9,12 +9,13 @@ class ResiliparseConfig(BaseExtractionConfig):
     preserve_formatting: bool = True
     main_content: bool = True
 
-    list_bullets: bool = True
-    alt_texts: bool = False
-    links: bool = True
+    alt_texts: bool = True
+    links: bool = False
     form_fields: bool = False
     noscript: bool = False
-    comments: Optional[List[str]] = None
+    comments: bool = True
+    post_meta: bool = True
+    hidden_elements: bool = False
     skip_elements: Optional[List[str]] = None
 
 
