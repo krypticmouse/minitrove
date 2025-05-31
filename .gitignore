@@ -193,6 +193,10 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
-# Added by cargo
+# Test fixtures
+tests/fixtures/extract/output/
+tests/fixtures/extract/diff/
 
+
+# Added by cargo
 /target
