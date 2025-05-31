@@ -1,0 +1,94 @@
+4
+$\begingroup$
+
+I read a few "function >> imperative/OOP" articles because I heard there was a move in imperative OOP languages toward a functional style of coding, especially encouraging pure functions when possible. One recurring argument is that by not mutating state, you don't have to worry about race conditions and locking.
+
+I do get the logic behind that: no two processes would mutate the same data, so locking and race conditions are irrelevant. Problem is I hadn't done any parallel programming or know any functional languages, so it's hard for me to really understand. I got as far as reading about persistent data structures as replacements for large mutable structures, but I hit a wall. I'm looking for an example, in plain language, of a parallel algorithm in an imperative style and a functional style that illustrates this recurring argument.
+
+If it helps to provide a programming problem, let's say I have an array of integers (A). People submit commands (A[i] += 1) in real time to increment an element of that array by 1 (at a valid index i). Different elements are intended to be incremented in parallel. I can imagine the imperative solution does this but it locks an index during an increment. What would a functional solution look like? I will accept answers as simple as naming a functional data structure, if I could understand it by looking it up.
+
+Improve this question
+$\endgroup$
+
+2 Answers 2
+
+Reset to default
+3
+$\begingroup$
+
+Functional programming is great for parallel programming that is not concurrent. The example problem you gave is inherently concurrent, but we can make it non-concurrent by "batching" the work that needs to be performed.
+
+The batch form of the problem you suggested is like this. Input: length of desired array, and collection of indices to increment. Output: array where at each index we've summed up the number of times that index appears in the input. For example, for an array of size 4 and indices [1,0,1,1,0,0,0,3,0,1], the output should be [5,4,0,1] because 0 appears 5 times, 1 appears 4 times, etc.
+
+An imperative solution is exactly like you suggest (I'm using Python code just for pseudocode):
+
+# n is size of resulting array
+def ImperativeCountIndices(n, indices):
+  A = [0 for i in range(n)]
+  for i in indices:   # do this step in parallel
+    A[i] += 1         # this has to be atomic!!
+  return A
+
+In contrast, a functional approach is as follows. The high level idea is to work with dictionaries mapping indices to values. Then we sum the values of each index by merging dictionaries.
+
+from functools import reduce
+
+def mergeDicts(d1, d2):
+  allkeys = set(d1.keys()).union(d2.keys())
+  return {k: d1.get(k, 0) + d2.get(k, 0) for k in allkeys}
+
+def FunctionalCountIndices(n, indices):
+  d = reduce(mergeDicts, map(lambda i: {i: 1}, indices))
+  return [d.get(i, 0) for i in range(n)]
+
+The mergeDicts function might look expensive, but actually if you use binary search trees you can make this function extremely efficient and highly parallel (see e.g. https://arxiv.org/abs/1602.02120). The reduce and map functions are great examples of a fundamental "functional programming primitives" which are highly parallel.
+
+The great thing about the functional approach is that we don't have to worry about potential data races. The behavior of the functional code is exactly the same every time you execute it.
+
+Improve this answer
+$\endgroup$
+2
+  • $\begingroup$ By avoiding changing state, the functional example does avoid locking compared to the imperative example, but how would the collection itself be constructed without locking? About the risk of multiple people writing to the same index at the same time, it seems to me that even if I created a new immutable array upon each command instead of appending to a mutable array, I have to lock an index to prevent an array forking to several updated arrays e.g. [1, 0, 1] to 3 copies of [1, 0, 1, 5] instead of one [1, 0, 1, 5, 5, 5]. $\endgroup$
+    – BatWannaBe
+    Commented Mar 29, 2021 at 9:51
+  • 1
+    $\begingroup$ I think I see what you meant by "great for parallel but not concurrent" now (jury's still out on those terms' distinction): the collection is what provided opportunities to parallelize. In this specific case, you don't need to lock because instead of storing 1 indispensable counter for each unique index, the dictionaries store a counter for every command, and these counters are added and expended upon merges. I suppose to make the collection, you really do need to lock to maintain correctness, but once you have it, you can feed it into a functional parallel algorithm with no locks. $\endgroup$
+    – BatWannaBe
+    Commented Mar 31, 2021 at 23:55
+2
+$\begingroup$
+
+I'm not sure functional programming does make parallel programming any easier, when taken in the round.
+
+If you program in a "functional style" (including all so-called good practices), then converting certain steps of a serial program to parallel execution (and getting results that are equivalent to the serial execution) may not usually involve much further difficulty, but that is primarily because all the difficulty has already been imposed in drafting the program in a form where it doesn't matter whether many steps are executed serially or in parallel.
+
+Moreover, functional programming does not claim to guarantee that a serialised execution of a program actually produces "correct" (i.e. intended) results for all inputs, only that parallelised execution will involve no additional error.
+
+In general, business systems have an irreducible need to mutate state and shared data, so any benefit or guarantee that depends in theory on not mutating state at all, can be dismissed out of hand as almost worthless to real-world development.
+
+If the point at which state is mutated is seen as a boundary across which the guarantees of functional programming cease to apply, then the vast majority of programs can get almost nothing done before having to cross a boundary and step outside such guarantees.
+
+Many people seem to over-estimate how much error actually occurs in systems due to race conditions etc. involving unnecessary mutations, rather than errors which involve the necessary mutations of shared data that must occur equally in functional programs as in non-functional ones.
+
+Arguably, a real benefit of functional programming is that it allows certain kinds of functionality (especially complex calculations) to be implemented more quickly or to a more complex extent, at the price of a higher initial learning curve.
+
+In other words, it will allow the best programmers to work a little faster once experienced, or get a little further than before with the most complex systems, at the expense of requiring far more training and experience to begin with, and excluding third-rate programmers from getting anywhere at all.
+
+This, however, is not the typical understanding people have of the word "easier", or of a tool that "makes things easy". I contend that functional programming may improve productivity in some cases, but it does so by increasing the threshold of difficulty in many respects.
+
+Improve this answer
+$\endgroup$
+
+Your Answer
+
+By clicking “Post Your Answer”, you agree to our terms of service and acknowledge you have read our privacy policy.
+
+Start asking to get answers
+
+Find the answer to your question by asking.
+
+Ask question
+
+Explore related questions
+
+See similar questions with these tags.

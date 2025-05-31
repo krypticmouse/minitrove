@@ -1,0 +1,6 @@
+I read a few "function >> imperative/OOP" articles because I heard there was a move in imperative OOP languages toward a functional style of coding, especially encouraging pure functions when possible. One recurring argument is that by not mutating state, you don't have to worry about race conditions and locking.
+I do get the logic behind that: no two processes would mutate the same data, so locking and race conditions are irrelevant. Problem is I hadn't done any parallel programming or know any functional languages, so it's hard for me to really understand. I got as far as reading about persistent data structures as replacements for large mutable structures, but I hit a wall. I'm looking for an example, in plain language, of a parallel algorithm in an imperative style and a functional style that illustrates this recurring argument.
+If it helps to provide a programming problem, let's say I have an array of integers (A
+). People submit commands (A[i] += 1
+) in real time to increment an element of that array by 1 (at a valid index i
+). Different elements are intended to be incremented in parallel. I can imagine the imperative solution does this but it locks an index during an increment. What would a functional solution look like? I will accept answers as simple as naming a functional data structure, if I could understand it by looking it up.

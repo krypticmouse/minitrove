@@ -1,0 +1,30 @@
+-
+Linear response without audible click
+Smooth keystrokes with a softer spring for fast and precise actuation
+Actuation / tactile force: 45g / NA
+Key-travel distance: 2mm to actuate, 4mm to bottom
+-
+Light tactile feedback without audible click
+A less-distinct tactile bump than the blue switch, while providing enough feedback for the activation to be felt
+Actuation / tactile force: 45g / 55g
+Key-travel distance: 2mm to actuate, 4mm to bottom
+-
+Strong tactile feedback with an audible click
+Distinct tactile bump can be felt easily, providing a satisfying typing experience (though it may be harder to double-tap)
+Actuation / tactile force: 50g / 60g
+Key-travel distance: 2.2mm to actuate, 4mm to bottom
+-
+Linear response without audible click
+Smooth keystrokes with a stronger spring for faster switch reset, which may help prevent accidental key presses
+Actuation / tactile force: 60g / NA
+Key-travel distance: 2mm to actuate, 4mm to bottom
+-
+Linear response without audible click
+The fastest Cherry MX switch that"s 40% quicker than the standard switch, with no pressure points and light actuation
+Actuation / tactile force: 45g / NA
+Key-travel distance: 1.2mm to actuate, 3.4mm to bottom
+-
+Linear response without audible click
+Patented noise reduction for soft, silent keystrokes with extremely fast response
+Actuation / tactile force: 45g / NA
+Key-travel distance: 1.9mm to actuate, 3.7mm to bottom
