@@ -1,0 +1,4 @@
+Machine learning algorithms learn from data to make predictions.
+Natural language processing helps computers understand human text.
+Deep learning uses neural networks with multiple layers.
+AI systems can process and analyze large datasets efficiently. 
