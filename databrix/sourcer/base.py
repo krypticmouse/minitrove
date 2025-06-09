@@ -3,30 +3,31 @@ import fsspec
 
 from tqdm import tqdm
 from abc import abstractmethod
-from typing import Dict, Iterator, List, Tuple
-from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor, as_completed
+from typing import Dict, List, Tuple, Iterator
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 
-from minitrove.types import DocumentSource
-from minitrove.schema.sourcer import Document
-from minitrove.sourcer.utils import fetch_csv_schema, get_compression
+from databrix.types import DocumentSource
+from databrix.schema.sourcer import Document
+from databrix.sourcer.utils import fetch_csv_schema, get_compression
 
 
 class BaseSourcer:
     def __init__(
         self, 
-        keys: Dict[str, str], 
         text_key: str,
         id_key: str,
-        exclude_keys: List[str] = [],
+        env_vars: Dict[str, str] | None = None,
+        exclude_keys: List[str] | None = None,
     ):
-        self.keys = keys
+        self.env_vars = env_vars
         self.text_key = text_key
         self.id_key = id_key
         self.exclude_keys = exclude_keys
 
         # Set keys as env variables
-        for key, value in keys.items():
-            os.environ[key] = value
+        if self.env_vars:
+            for key, value in self.env_vars.items():
+                os.environ[key] = value
 
 
     def source(
@@ -70,6 +71,7 @@ class BaseSourcer:
                     documents[i] = doc
 
         return documents
+
 
 
     def source_batch(

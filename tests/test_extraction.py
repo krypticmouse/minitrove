@@ -4,8 +4,8 @@ import pytest
 from tqdm import tqdm
 from fastdiff import compare
 
-from minitrove.extract.extractors import ResiliparseExtractor, TrafilaturaExtractor
-from minitrove.schema.extract import ResiliparseConfig, TrafilaturaConfig
+from databrix.extract.extractors import ResiliparseExtractor, TrafilaturaExtractor
+from databrix.schema.extract import ResiliparseConfig, TrafilaturaConfig
 
 
 INPUT_PATH = "tests/fixtures/extract/html"

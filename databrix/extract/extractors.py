@@ -2,8 +2,8 @@ from typing import Tuple
 from trafilatura import extract
 from resiliparse.extract.html2text import extract_plain_text
 
-from minitrove.extract.base import BaseExtractor
-from minitrove.schema.extract import ResiliparseConfig, TrafilaturaConfig
+from databrix.extract.base import BaseExtractor
+from databrix.schema.extract import ResiliparseConfig, TrafilaturaConfig
 
 
 class ResiliparseExtractor(BaseExtractor):

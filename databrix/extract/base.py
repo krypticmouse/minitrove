@@ -3,7 +3,7 @@ from typing import Any, List, Tuple
 from abc import ABC, abstractmethod
 from concurrent.futures import ProcessPoolExecutor
 
-from minitrove.schema.extract import BaseExtractionConfig
+from databrix.schema.extract import BaseExtractionConfig
 
 
 class BaseExtractor(ABC):

@@ -1,12 +1,12 @@
-import json
 import uuid
 import fsspec
+import orjson
 
 from tqdm import tqdm
 from typing import Iterator, Tuple
 
-from minitrove.schema.sourcer import Document
-from minitrove.sourcer.base import BaseSourcer
+from databrix.schema.sourcer import Document
+from databrix.sourcer.base import BaseSourcer
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
@@ -16,8 +16,11 @@ class JSONSourcer(BaseSourcer):
         self.schema = None
 
     def fetch_document(self, idx: int, line: str) -> Tuple[int, Document]:
-        data = json.loads(line)
-        data = {k: v for k, v in data.items() if k not in self.exclude_keys}
+        data = orjson.loads(line)
+
+        if self.exclude_keys:
+            data = {k: v for k, v in data.items() if k not in self.exclude_keys}
+        
         return idx, Document(
             id=data[self.id_key],
             text=data[self.text_key],
@@ -58,7 +61,7 @@ class TXTSourcer(BaseSourcer):
             text=line,
         )
 
-    def source_path(self, path: str, compression: str | None = None, num_threads: int = 1) -> Iterator[Document, None, None]:
+    def source_path(self, path: str, compression: str | None = None, num_threads: int = 1) -> Iterator[Document]:
         documents = []
 
         if self.split_by_newline:
